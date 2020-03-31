@@ -12,8 +12,7 @@ show_help() {
   exit 1
 }
 
-
-version=3.8  #Default
+version=3.8  # default
 
 while (( "$#" )); do
   case "$1" in
@@ -39,16 +38,26 @@ while (( "$#" )); do
   esac
 done
 
-# 1. install gnuradio
-## 1.1 install pybombs
+# install pybombs
 sudo apt install git -y
 sudo apt install cmake -y
-sudo apt install python3
+sudo apt install python3 -y
 sudo apt autoremove -y
 sudo apt install python3-pip -y
 sudo pip3 install --upgrade git+https://github.com/gnuradio/pybombs.git
 
-## 1.2 install gnuradio
+# install gr-satellites dependencies
+cd ~
+git clone https://github.com/quiet/libfec
+cd libfec
+./configure
+make
+sudo make install
+pip3 install construct
+pip3 install requests
+sudo apt install swig -y
+
+# install gnuradio
 pybombs auto-config
 pybombs recipes add-defaults
 
@@ -60,9 +69,9 @@ fi
 
 sudo pybombs prefix init /usr/local -R $recipe
 
-## 1.3 update environment variables
-pythonpath="PYTHONPATH=/usr/local/lib/python3/dist-packages:\$PYTHONPATH"
-ldlibpath="LD_LIBRARY_PATH=/usr/local/lib:\$LD_LIBRARY_PATH"
+# update environment variables
+pythonpath="export PYTHONPATH=/usr/local/lib/python3/dist-packages:\$PYTHONPATH"
+ldlibpath="export LD_LIBRARY_PATH=/usr/local/lib:\$LD_LIBRARY_PATH"
 
 echo $pythonpath >> ~/.bashrc
 echo $pythonpath >> ~/.profile
@@ -72,19 +81,7 @@ echo $ldlibpath >> ~/.profile
 source ~/.bashrc
 source ~/.profile
 
-# 2. install gr-satellites
-## 2.1 install dependencies
-cd ~
-git clone https://github.com/quiet/libfec
-cd libfec
-./configure
-make
-sudo make install
-pip3 install construct
-pip3 install requests
-sudo apt install swig
-
-## 2.2 install gr-satellites
+# install gr-satellites
 cd ~
 git clone https://github.com/daniestevez/gr-satellites
 cd gr-satellites
@@ -97,4 +94,3 @@ sudo make install
 sudo ldconfig
 cd ..
 ./compile_hierarchical.sh
-
