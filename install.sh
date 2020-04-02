@@ -4,71 +4,29 @@
 # TODO: Copyright
 # ------------------------------------------------------
 
-show_help() {
-  echo "Usage: $0 [option...]" 
-  echo
-  echo "  -v, --version        gnu radio version (3.7 or 3.8)"
-  echo
-  exit 1
-}
+rm install.log
+file=$(dirname $0)/install.log
 
-version=3.8  # default
+# install dependencies
+sudo apt install git cmake python3 python3-pip swig -y &>> $file
+sudo apt autoremove -y &>> $file
+sudo pip3 install --upgrade git+https://github.com/gnuradio/pybombs.git &>> $file
+pip3 install construct requests &>> $file
 
-while (( "$#" )); do
-  case "$1" in
-    -v | --version)
-      if [ "$2" == "3.7" ] || [ "$2" == "3.8" ]; then
-	version=$2
-      else
-        echo "GNU Radio version $2 is not supported by this script"
-	exit 1
-      fi
-      shift 2
-      ;;
-    -h | --help)
-      show_help
-      exit 0
-      ;;
-    -* | --*)
-      echo "Error: Unsupported flag $1"
-      exit 1
-      ;;
-    --) # End argparse
-      break
-  esac
-done
-
-# install pybombs
-sudo apt install git -y
-sudo apt install cmake -y
-sudo apt install python3 -y
-sudo apt autoremove -y
-sudo apt install python3-pip -y
-sudo pip3 install --upgrade git+https://github.com/gnuradio/pybombs.git
-
-# install gr-satellites dependencies
 cd ~
-git clone https://github.com/quiet/libfec
+git clone https://github.com/quiet/libfec &>> $file
 cd libfec
-./configure
-make
-sudo make install
-pip3 install construct
-pip3 install requests
-sudo apt install swig -y
+./configure &>> $file
+make &>> $file
+sudo make install &>> $file
 
 # install gnuradio
-pybombs auto-config
-pybombs recipes add-defaults
+pybombs auto-config &>> $file
+pybombs recipes add-defaults &>> $file
 
-if [ "$version" == "3.7" ]; then
-  recipe="gnuradio-stable"
-else
-  recipe="gnuradio-default"
-fi
 
-sudo pybombs prefix init /usr/local -R $recipe
-
+echo "Installing GNU Radio 3.8... output logged to install.log"
+sudo pybombs prefix init /usr/local -R "gnuradio-default" &>> $file
 # update environment variables
 pythonpath="export PYTHONPATH=/usr/local/lib/python3/dist-packages:\$PYTHONPATH"
 ldlibpath="export LD_LIBRARY_PATH=/usr/local/lib:\$LD_LIBRARY_PATH"
@@ -83,14 +41,14 @@ source ~/.profile
 
 # install gr-satellites
 cd ~
-git clone https://github.com/daniestevez/gr-satellites
+git clone https://github.com/daniestevez/gr-satellites &>> $file
 cd gr-satellites
-git checkout maint-$version
+git checkout maint-3.8 &>> $file
 mkdir build
 cd build
-cmake ..
-make
-sudo make install
-sudo ldconfig
+cmake .. &>> $file
+make &>> $file
+sudo make install &>> $file
+sudo ldconfig &>> $file
 cd ..
-./compile_hierarchical.sh
+./compile_hierarchical.sh &>> $file
