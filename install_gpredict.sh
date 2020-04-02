@@ -3,6 +3,7 @@
 # -------------------
 # TODO: Copyright
 # -------------------
+set -e
 
 show_help() {
   echo "Usage: $0 [option...]"

@@ -4,29 +4,29 @@
 # TODO: Copyright
 # ------------------------------------------------------
 
+set -e
 rm install.log
 file=$(dirname $0)/install.log
 
 # install dependencies
-sudo apt install git cmake python3 python3-pip swig -y &>> $file
-sudo apt autoremove -y &>> $file
-sudo pip3 install --upgrade git+https://github.com/gnuradio/pybombs.git &>> $file
-pip3 install construct requests &>> $file
+echo "Installing dependencies..."
+sudo apt install git cmake python3 python3-pip swig -y
+sudo apt autoremove -y
+sudo pip3 install --upgrade git+https://github.com/gnuradio/pybombs.git
+pip3 install construct requests
 
 cd ~
-git clone https://github.com/quiet/libfec &>> $file
+git clone https://github.com/quiet/libfec
 cd libfec
-./configure &>> $file
-make &>> $file
-sudo make install &>> $file
+./configure
+make
+sudo make install
 
 # install gnuradio
-pybombs auto-config &>> $file
-pybombs recipes add-defaults &>> $file
+pybombs auto-config
+pybombs recipes add-defaults
 
-
-echo "Installing GNU Radio 3.8... output logged to install.log"
-sudo pybombs prefix init /usr/local -R "gnuradio-default" &>> $file
+sudo pybombs prefix init /usr/local -R "gnuradio-default"
 # update environment variables
 pythonpath="export PYTHONPATH=/usr/local/lib/python3/dist-packages:\$PYTHONPATH"
 ldlibpath="export LD_LIBRARY_PATH=/usr/local/lib:\$LD_LIBRARY_PATH"
@@ -41,14 +41,14 @@ source ~/.profile
 
 # install gr-satellites
 cd ~
-git clone https://github.com/daniestevez/gr-satellites &>> $file
+git clone https://github.com/daniestevez/gr-satellites
 cd gr-satellites
-git checkout maint-3.8 &>> $file
+git checkout maint-3.8
 mkdir build
 cd build
-cmake .. &>> $file
-make &>> $file
-sudo make install &>> $file
-sudo ldconfig &>> $file
+cmake ..
+make
+sudo make install
+sudo ldconfig
 cd ..
-./compile_hierarchical.sh &>> $file
+./compile_hierarchical.sh
