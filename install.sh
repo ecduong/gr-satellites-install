@@ -5,8 +5,6 @@
 # ------------------------------------------------------
 
 set -e
-rm install.log
-file=$(dirname $0)/install.log
 
 # install dependencies
 echo "Installing dependencies..."
