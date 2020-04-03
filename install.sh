@@ -24,7 +24,7 @@ sudo make install
 pybombs auto-config
 pybombs recipes add-defaults
 
-sudo pybombs prefix init /usr/local -R "gnuradio-default"
+sudo pybombs prefix init /usr/local -R gnuradio-default
 # update environment variables
 pythonpath="export PYTHONPATH=/usr/local/lib/python3/dist-packages:\$PYTHONPATH"
 ldlibpath="export LD_LIBRARY_PATH=/usr/local/lib:\$LD_LIBRARY_PATH"
