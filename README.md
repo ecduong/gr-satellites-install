@@ -5,4 +5,8 @@ This repository provides an installation script to install both gr-satellites an
 * Ubuntu 18.04
 
 ## Usage
-Use the following command: `sudo ./install.sh`. This will install GNU Radio version 3.8 and gr-satellites for version 3.8
+To install the modified version of gpredict:
+* Use the following command: `./install_gpredict.sh`
+To install GNU Radio version 3.8 and gr-satellites:
+* Use the following command: `./install.sh`
+* Do not run script as sudo; note that the install script will ask for your password a second time later on in the installation process
