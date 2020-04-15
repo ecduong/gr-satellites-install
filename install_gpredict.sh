@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# -------------------
-# TODO: Copyright
-# -------------------
 set -e
 
 show_help() {
@@ -44,8 +41,6 @@ git clone https://github.com/victorhyde/gpredict
 sudo apt install libtool intltool autoconf automake libcurl4-openssl-dev -y
 sudo apt install pkg-config libglib2.0-dev libgtk-3-dev libgoocanvas-2.0-dev -y
 cd gpredict
-git checkout dev
 ./autogen.sh --prefix=$prefix
 sudo make
 sudo make install
-
